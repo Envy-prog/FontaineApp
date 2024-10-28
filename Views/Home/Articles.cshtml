@@ -1,0 +1,74 @@
+﻿@model FontaineApp.Models.ViewModels.UploadedFileViewModel
+@{
+    ViewData["Title"] = "Articles page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Tubbataha Chronicles</h1>
+    <p>Feel free to browse or upload articles in this section</p>
+</div>
+
+<div class="col-md-12">
+    <form method="post" asp-action="FileUpload" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="FileName"></label>
+                <input type="file" name="file" class="form-control" accept=".pdf" required />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Title"></label>
+                <input type="text" asp-for="Title" class="form-control" required />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Description"></label>
+                <input type="text" asp-for="Description" class="form-control" required />
+            </div>
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary mt-3">Upload</button>
+            </div>
+        </div>
+    </form>
+</div>
+<hr />
+@if (Model.SystemFiles.Count == 0)
+{
+    <caption>There are no records in the system</caption>
+}
+else
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(Model => Model.Title)</th>
+                <th>@Html.DisplayNameFor(Model => Model.Description)</th>
+                <th>View File</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var file in Model.SystemFiles)
+            {
+                <tr>
+                    <th>@file.Title</th>
+                    <th>@file.Description</th>
+                    <th>
+                        @if (!string.IsNullOrEmpty(file.FilePath))
+                        {
+                            <a asp-action="ViewPDF" asp-route-id="@file.Id" target="_blank" class="btn btn-primary">View PDF</a>
+                        }
+                    </th>
+                    <th>
+                        <form asp-action="Delete" asp-route-id="@file.Id" method="post" style="display:inline">
+                            <button type="submit" class="btn btn-danger">Delete File</button>
+                        </form>
+                    </th>
+                </tr>
+            }
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+}
+
+
+
